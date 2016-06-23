@@ -452,5 +452,27 @@ describe("sinon.sandbox", function () {
 
             sandbox.restore();
         });
+
+        describe.only("restores stubbed modules", function () {
+            var sinonTestCase = null;
+            var sandbox = sinon.sandbox.create();
+
+            beforeEach(function() {
+                sinonTestCase = require('./testModule');
+                console.log(Boolean(sinonTestCase.init.restore));
+                sandbox.stub(sinonTestCase);
+                console.log(Boolean(sinonTestCase.init.restore));
+            });
+
+            afterEach(function() {
+                sandbox.restore();
+                console.log(Boolean(sinonTestCase.init.restore));
+            });
+
+            it('should work', function() {
+                assert(true);
+            });
+
+        });
     });
 });
