@@ -711,6 +711,58 @@ describe("sinonMatch", function () {
         });
     });
 
+    describe(".map", function () {
+        it("is typeOf map matcher", function () {
+            var map = sinonMatch.map;
+
+            assert(sinonMatch.isMatcher(map));
+            assert.equals(map.toString(), "typeOf(\"map\")");
+        });
+
+        describe("map.deepEquals", function () {
+            if (typeof Map === "function") {
+                it("has a .deepEquals matcher", function () {
+                    var mapOne = new Map();
+                    mapOne.set("one", 1);
+                    mapOne.set("two", 2);
+                    mapOne.set("three", 3);
+
+                    var deepEquals = sinonMatch.map.deepEquals(mapOne);
+                    assert(sinonMatch.isMatcher(deepEquals));
+                    assert.equals(deepEquals.toString(), "deepEquals(Map[['one',1],['two',2],['three',3]])");
+                });
+
+                it("matches arrays with the exact same elements", function () {
+                    var mapOne = new Map();
+                    mapOne.set("one", 1);
+                    mapOne.set("two", 2);
+                    mapOne.set("three", 3);
+
+                    var mapTwo = new Map();
+                    mapTwo.set("one", 1);
+                    mapTwo.set("two", 2);
+                    mapTwo.set("three", 3);
+
+                    var mapThree = new Map();
+                    mapThree.set("one", 1);
+                    mapThree.set("two", 2);
+
+                    var deepEquals = sinonMatch.map.deepEquals(mapOne);
+                    assert(deepEquals.test(mapTwo));
+                    assert.isFalse(deepEquals.test(mapThree));
+                    assert.isFalse(deepEquals.test(new Map()));
+                });
+
+                it("fails when passed a non-map object", function () {
+                    var deepEquals = sinonMatch.array.deepEquals(new Map());
+                    assert.isFalse(deepEquals.test({}));
+                    assert.isFalse(deepEquals.test([]));
+                });
+            }
+        });
+    });
+
+
     describe(".regexp", function () {
         it("is typeOf regexp matcher", function () {
             var regexp = sinonMatch.regexp;
